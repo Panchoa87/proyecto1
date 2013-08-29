@@ -55,10 +55,11 @@ class tweet():
                 self.tweetwords[i]="<NUMERO>"
                 
         
-        self.__buscarPalabraDiccionario(self.tweetwords)
+        #self.__buscarPalabraDiccionario(self.tweetwords)
+        self.__sacarPlural(self.tweetwords)
         self.tweetwords=norma.cambiarPalabras(self.tweetwords)
         
-        self.__sacarPlural(self.tweetwords)
+        
                 
         
     def limpiar(self,tweetLimpiar):

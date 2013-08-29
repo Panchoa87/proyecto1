@@ -12,13 +12,17 @@ class red():
     '''
     classdocs
     '''
-    def __init__(self,sentido,stw=0,balance=0,umbral=1,tabla="enlaces_clasificador_sentido"):
+    def __init__(self,sentido,stw=0,balance="0",umbral=1,tabla="enlaces_clasificador_sentido"):
         '''
         Constructor
         '''
         conn=conex.conexion()
         self.grafo = nx.DiGraph()
-        sql="SELECT `palabra_source`,`palabra_target` FROM `"+tabla+"` WHERE `sentido_manual`="+str(sentido)+" "
+        if balance=="0":
+            self.tabenlaces="enlaces_clasificador_0"
+        if balance=="1":
+            self.tabenlaces="enlaces_clasificador_1"
+        sql="SELECT `palabra_source`,`palabra_target` FROM `"+self.tabenlaces+"` WHERE `sentido_manual`="+str(sentido)+" "
         conn.ejecutarSql(sql)
         resultadoC1=conn.getResultado()
         for reg1 in resultadoC1:

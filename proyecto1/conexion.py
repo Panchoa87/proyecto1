@@ -11,12 +11,12 @@ class conexion():
     '''
 
 
-    def __init__(self,direccion="localhost",user="root",password="",bd="analitic"):
+    def __init__(self,direccion="localhost",user="root",password="98312996",bd="analitic"):
         '''
         Constructor
         '''
         #abrir conexion bd
-        self.db = MySQLdb.connect("localhost","root","","analitic")
+        self.db = MySQLdb.connect(direccion,user,password,bd)
         
         # prepare a cursor object using cursor() method
         self.c = self.db.cursor()
@@ -32,7 +32,6 @@ class conexion():
     def cerrarConexion(self):
         self.db.close()
     def actualizar(self):
-        print "actualizo"
         self.db.commit()
     def prueba(self):
         c = self.db.cursor()

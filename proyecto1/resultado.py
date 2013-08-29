@@ -109,7 +109,8 @@ class resultado():
                     self.conn.ejecutarSql("UPDATE `clasificar_"+str(self.tabla)+"` SET `"+str(self.w)+"`='2' WHERE `id_articulo`='"+str(id)+"'")     
                 else:
                     #print "El Tweet es positivo"
-                    self.conn.ejecutarSql("UPDATE `clasificar_"+str(self.tabla)+"` SET `"+str(self.w)+"`='1' WHERE `id_articulo`='"+str(id)+"'")
+                    sql="UPDATE `clasificar_"+str(self.tabla)+"` SET `"+str(self.w)+"`='1' WHERE `id_articulo`='"+str(id)+"'"
+                    self.conn.ejecutarSql(sql)
         
         
         if neutro.getCosto()==0 and negativo.getCosto()==0 and positivo.getCosto()>0:
@@ -134,10 +135,9 @@ class resultado():
         ##print "_____________________________________________"    
         self.conn.actualizar()
     
-    def estadisticas(self):
+    def estadisticas(self,ides):
         ####CALCULOS FINALES####
-        sql="SELECT COUNT(*) FROM `clasificar_"+str(self.tabla)+"` WHERE `"+str(self.w)+"`!= 5"
-        print sql
+        sql="SELECT COUNT(*) FROM `clasificar_"+str(self.tabla)+"` WHERE id_articulo IN("+ides+")"
         self.conn.ejecutarSql(sql)
         consulta=self.conn.getResultado()
         for reg in consulta:
@@ -145,7 +145,7 @@ class resultado():
             Total=reg[0]
             
         
-        self.conn.ejecutarSql("SELECT COUNT(*) FROM `clasificar_"+str(self.tabla)+"` WHERE `"+str(self.w)+"`= 5")
+        self.conn.ejecutarSql("SELECT COUNT(*) FROM `clasificar_"+str(self.tabla)+"` WHERE `"+str(self.w)+"`= 5 AND id_articulo IN("+ides+")")
         consulta=self.conn.getResultado()
         for reg in consulta:
             sineva=reg[0]
@@ -161,8 +161,8 @@ class resultado():
         print "Neutros"
         #f.write("\n_*_*_*_*_*_*_*_*_*_*\n")
         #f.write("Neutros \n")
-        
-        self.conn.ejecutarSql("SELECT COUNT(*) FROM `clasificar_"+str(self.tabla)+"` WHERE `sentido_manual`=0 and `"+str(self.w)+"`= 0 AND `"+str(self.w)+"`!= 5 ")
+        sql="SELECT COUNT(*) FROM `clasificar_"+str(self.tabla)+"` WHERE `sentido_manual`=0 and `"+str(self.w)+"`= 0 AND `"+str(self.w)+"`!= 5 AND id_articulo IN("+ides+")"
+        self.conn.ejecutarSql(sql)
         consulta=self.conn.getResultado()
         
         for reg in consulta:
@@ -170,15 +170,16 @@ class resultado():
             TPn=float(reg[0])
             TP_u=TP_u+TPn
         
-        self.conn.ejecutarSql("SELECT COUNT(*) FROM `clasificar_"+str(self.tabla)+"` WHERE `sentido_manual`!= 0 and `"+str(self.w)+"`= 0 AND `"+str(self.w)+"`!= 5 ")
+        sql="SELECT COUNT(*) FROM `clasificar_"+str(self.tabla)+"` WHERE `sentido_manual`!= 0 and `"+str(self.w)+"`= 0 AND `"+str(self.w)+"`!= 5 AND id_articulo IN("+ides+")"
+        self.conn.ejecutarSql(sql)
         consulta=self.conn.getResultado()
         
         for reg in consulta:
             #print "FPn: "+str(reg[0])
             FPn=float(reg[0])
             FP_u=FP_u+FPn
-            
-        self.conn.ejecutarSql("SELECT COUNT(*) FROM `clasificar_"+str(self.tabla)+"` WHERE `sentido_manual`=0 and `"+str(self.w)+"`!=0 AND `"+str(self.w)+"`!= 5 ")
+        sql="SELECT COUNT(*) FROM `clasificar_"+str(self.tabla)+"` WHERE `sentido_manual`=0 and `"+str(self.w)+"`!=0 AND `"+str(self.w)+"`!= 5 AND id_articulo IN("+ides+")"    
+        self.conn.ejecutarSql(sql)
         consulta=self.conn.getResultado()
         
         for reg in consulta:
@@ -198,15 +199,15 @@ class resultado():
             accun=0
         
         if (TPn+FPn) !=0:
-            pren=float((TPn)/(TPn+FPn))    
-            print "Precission: " + str(pren)
+            self.pren=float((TPn)/(TPn+FPn))    
+            print "Precission: " + str(self.pren)
         else:
             #print "Precission: No definido (/0)"
             pren=0
         
         if (TPn+FNn) !=0:
-            recn=float((TPn)/(TPn+FNn))
-            print "Recall: " + str(recn)
+            self.recn=float((TPn)/(TPn+FNn))
+            print "Recall: " + str(self.recn)
         else:
             #print "Recall: No definido (/0)"
             recn=0
@@ -221,23 +222,24 @@ class resultado():
         #positivos
         print "Positivos"
         #f.write("Positivos\n")
-        
-        self.conn.ejecutarSql("SELECT COUNT(*) FROM `clasificar_"+str(self.tabla)+"` WHERE `sentido_manual`=1 and `"+str(self.w)+"`= 1 AND `"+str(self.w)+"`!= 5 ")
+        sql="SELECT COUNT(*) FROM `clasificar_"+str(self.tabla)+"` WHERE `sentido_manual`=1 and `"+str(self.w)+"`= 1 AND `"+str(self.w)+"`!= 5 AND id_articulo IN("+ides+")"
+        self.conn.ejecutarSql(sql)
         consulta=self.conn.getResultado()
         
         for reg in consulta:
             #print "TPp: "+str(reg[0])
             TPp=float(reg[0])
             TP_u=TP_u+TPp
-        
-        self.conn.ejecutarSql("SELECT COUNT(*) FROM `clasificar_"+str(self.tabla)+"` WHERE `sentido_manual`!= 1 and `"+str(self.w)+"`= 1 AND `"+str(self.w)+"`!= 5 ")
+        sql="SELECT COUNT(*) FROM `clasificar_"+str(self.tabla)+"` WHERE `sentido_manual`!= 1 and `"+str(self.w)+"`= 1 AND `"+str(self.w)+"`!= 5 AND id_articulo IN("+ides+")"
+        self.conn.ejecutarSql(sql)
         consulta=self.conn.getResultado()
         
         for reg in consulta:
             #print "FPp: "+str(reg[0])
             FPp=float(reg[0])
             FP_u=FP_u+FPp
-        self.conn.ejecutarSql("SELECT COUNT(*) FROM `clasificar_"+str(self.tabla)+"` WHERE `sentido_manual`=1 and `"+str(self.w)+"`!=1 AND `"+str(self.w)+"`!= 5 ")
+        sql="SELECT COUNT(*) FROM `clasificar_"+str(self.tabla)+"` WHERE `sentido_manual`=1 and `"+str(self.w)+"`!=1 AND `"+str(self.w)+"`!= 5 AND id_articulo IN("+ides+")"
+        self.conn.ejecutarSql(sql)
         consulta=self.conn.getResultado()
         
         for reg in consulta:
@@ -258,18 +260,18 @@ class resultado():
             accup=0
         
         if (TPp+FPp) !=0:    
-            prep=float((TPp)/(TPp+FPp))
-            print "Precission: " + str(prep)
+            self.prep=float((TPp)/(TPp+FPp))
+            print "Precission: " + str(self.prep)
         else:
             #print "Precission: No definido (/0)"
-            prep=0
+            self.prep=0
         
         if (TPp+FNp) !=0:
-            recp=float((TPp)/(TPp+FNp))
-            print "Recall: " + str(recp)
+            self.recp=float((TPp)/(TPp+FNp))
+            print "Recall: " + str(self.recp)
         else:
             #print "Recall: No definido (/0)"
-            recp=0
+            self.recp=0
         #try:
         #    print "F-1: "+str( 2*prep*recp/(prep+recp) )
         #    #f.write("F-1: "+str( 2*prep*recp/(prep+recp) ))
@@ -281,23 +283,24 @@ class resultado():
         
         print "Negativos"
         #f.write("Negativos\n")
-        self.conn.ejecutarSql("SELECT COUNT(*) FROM `clasificar_"+str(self.tabla)+"` WHERE `sentido_manual`=2 and `"+str(self.w)+"`= 2 AND `"+str(self.w)+"`!= 5 ")
+        sql="SELECT COUNT(*) FROM `clasificar_"+str(self.tabla)+"` WHERE `sentido_manual`=2 and `"+str(self.w)+"`= 2 AND `"+str(self.w)+"`!= 5 AND id_articulo IN("+ides+")"
+        self.conn.ejecutarSql(sql)
         consulta=self.conn.getResultado()
         
         for reg in consulta:
             #print "TPng: "+str(reg[0])
             TPng=float(reg[0])
             TP_u=TP_u+TPng
-        
-        self.conn.ejecutarSql("SELECT COUNT(*) FROM `clasificar_"+str(self.tabla)+"` WHERE `sentido_manual`!= 2 and `"+str(self.w)+"`= 2 AND `"+str(self.w)+"`!= 5 ")
+        sql="SELECT COUNT(*) FROM `clasificar_"+str(self.tabla)+"` WHERE `sentido_manual`!= 2 and `"+str(self.w)+"`= 2 AND `"+str(self.w)+"`!= 5 AND id_articulo IN("+ides+")"
+        self.conn.ejecutarSql(sql)
         consulta=self.conn.getResultado()
         
         for reg in consulta:
             #print "FPng: "+str(reg[0])
             FPng=float(reg[0])
             FP_u=FP_u+FPng
-            
-        self.conn.ejecutarSql("SELECT COUNT(*) FROM `clasificar_"+str(self.tabla)+"` WHERE `sentido_manual`=2 and `"+str(self.w)+"`!=2 AND `"+str(self.w)+"`!= 5 ")
+        sql="SELECT COUNT(*) FROM `clasificar_"+str(self.tabla)+"` WHERE `sentido_manual`=2 and `"+str(self.w)+"`!=2 AND `"+str(self.w)+"`!= 5 AND id_articulo IN("+ides+")"    
+        self.conn.ejecutarSql(sql)
         consulta=self.conn.getResultado()
         
         for reg in consulta:
@@ -317,18 +320,18 @@ class resultado():
             accung=0
         
         if (TPng+FPng) !=0:    
-            preng=float((TPng)/(TPng+FPng))
-            print "Precission: " + str(preng)
+            self.preng=float((TPng)/(TPng+FPng))
+            print "Precission: " + str(self.preng)
         else:
             #print "Precission: No definido (/0)"
-            preng=0
+            self.preng=0
         
         if (TPng+FNng) !=0:
-            recng=float((TPng)/(TPng+FNng))
-            print "Recall: " + str(recng)
+            self.recng=float((TPng)/(TPng+FNng))
+            print "Recall: " + str(self.recng)
         else:
             #print "Recall: No definido (/0)"
-            recng=0
+            self.recng=0
         #try:
         #    print "F-1: "+str( 2*preng*recng/(preng+recng) )
         #    #f.write("F-1: "+str( 2*preng*recng/(preng+recng) ))
@@ -345,18 +348,46 @@ class resultado():
         #print str(FN_u)+" kkakaka"
 
         print "Precision: " + str(float(TP_u/(TP_u+FP_u)))
-        microPRE=float(TP_u/(TP_u+FP_u))
+        self.microPRE=float(TP_u/(TP_u+FP_u))
         print "Recall: " + str(float(TP_u/(TP_u+FN_u)))
-        microREC=float(TP_u/(TP_u+FN_u))
-        print "F-measure: " + str(2*microPRE*microREC/(microPRE+microREC))
+        self.microREC=float(TP_u/(TP_u+FN_u))
+        print "F-measure: " + str(self.getMicroF1())
         print "_*_*_*_*_*_*"
         print "MACROaverage"
         print "_*_*_*_*_*_*"
         
-        print "Precision: " + str(float(pren+prep+preng)/3)
-        MACROPRE=float((pren+prep+preng)/3)
-        print "Recall: " + str(float(recn+recp+recng)/3)
-        MACROREC=float((recn+recp+recng)/3)
-        print "F-measure: " + str(2*MACROPRE*MACROREC/(MACROPRE+MACROREC))    
+        print "Precision: " + str(float(self.pren+self.prep+self.preng)/3)
+        self.MACROPRE=float((self.pren+self.prep+self.preng)/3)
+        print "Recall: " + str(float(self.recn+self.recp+self.recng)/3)
+        self.MACROREC=float((self.recn+self.recp+self.recng)/3)
+        print "F-measure: " + str(self.getMacroF1())    
         
         self.conn.cerrarConexion()
+        
+    def getPrecisionNeutros(self):
+        return self.pren
+    def getRecallNeutros(self):
+        return self.recn
+    
+    def getPrecisionNegativos(self):
+        return self.preng
+    def getRecallNegativos(self):
+        return self.recng
+    
+    def getPrecisionPositivos(self):
+        return self.prep
+    def getRecallPositivos(self):
+        return self.recp
+    
+    def getMicroPrecision(self):
+        return self.microPRE
+    def getMicroRec(self):
+        return self.microREC
+    def getMacroPrecision(self):
+        return self.macroPRE
+    def getMacroRec(self):
+        return self.macroREC
+    def getMacroF1(self):
+        return (2*self.MACROPRE*self.MACROREC/(self.MACROPRE+self.MACROREC))
+    def getMicroF1(self):
+        return (2*self.microPRE*self.microREC/(self.microPRE+self.microREC))

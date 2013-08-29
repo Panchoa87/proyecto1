@@ -99,6 +99,7 @@ def limpiar(tweetLimpiar):
     return tweet
 
 def sacarPlural(tweetwords):
+    #recibe un arreglo
     leaves="s"
     for leaf in leaves:
         for i in range (len(tweetwords)):
@@ -107,6 +108,7 @@ def sacarPlural(tweetwords):
     return tweetwords
 
 def sacarSimbolos(palabras):
+    #recibe un arreglo
     for i in range (len(palabras)):
         if "@" in palabras[i]:
             palabras[i]="<MENCION>"
@@ -129,3 +131,9 @@ def cambiarPalabras(palabras):
         if(len(resultado)>0):
             palabras[i]=resultado[0][0]
     return palabras
+def quitarVacios(palabras):
+    aux=[]
+    for i in palabras:
+        if i !='':
+            aux.append(i)
+    return aux
