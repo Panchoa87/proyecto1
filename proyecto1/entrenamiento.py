@@ -68,7 +68,7 @@ class entrenamiento():
             #### TOKENIZACION
             palabras=norma.sacarSimbolos(cuerpo)
             palabras=norma.sacarPlural(palabras)
-            #palabras=norma.cambiarPalabras(palabras)
+            palabras=norma.cambiarPalabras(palabras)
             palabras=norma.quitarVacios(palabras)
 
             ### BLOQUE PESOS ENLACES ###

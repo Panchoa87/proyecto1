@@ -58,7 +58,8 @@ class tweet():
         #self.__buscarPalabraDiccionario(self.tweetwords)
         self.__sacarPlural(self.tweetwords)
         self.tweetwords=norma.cambiarPalabras(self.tweetwords)
-        
+        #print self.tweetOriginal
+        #print self.tweetwords
         
                 
         

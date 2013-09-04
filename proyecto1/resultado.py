@@ -384,9 +384,9 @@ class resultado():
     def getMicroRec(self):
         return self.microREC
     def getMacroPrecision(self):
-        return self.macroPRE
+        return self.MACROPRE
     def getMacroRec(self):
-        return self.macroREC
+        return self.MACROREC
     def getMacroF1(self):
         return (2*self.MACROPRE*self.MACROREC/(self.MACROPRE+self.MACROREC))
     def getMicroF1(self):
