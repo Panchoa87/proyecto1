@@ -57,7 +57,6 @@ if __name__ == '__main__':
         neutro = r.red(0,stpw,balance,umbralpeso)
         positivo = r.red(1,stpw,balance,umbralpeso)
         negativo = r.red(2,stpw,balance,umbralpeso)
-        
         nodos=[]
         nodos.append(neutro.getNumeroNodos())
         nodos.append(positivo.getNumeroNodos())

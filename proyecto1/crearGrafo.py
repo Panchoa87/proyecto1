@@ -26,4 +26,5 @@ if __name__ == '__main__':
     print g.edges()
     d = json_graph.node_link_data(g) # node-link format to serialize
     print d
+    json.dump(d, open('pruebas/grafo.json','w'))
     
